@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="01" author="Avanesyan">
+    <createTable tableName="Device"
+      remarks="A IoT devices which will add">
+      <column name="id" type="int" autoIncrement="true">
+        <constraints nullable="false" unique="true" primaryKey="true"/>
+      </column>
+      <column name="serial_number" type="varchar(255)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="name" type="varchar(255)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="type" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="secret_key" type="varchar">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="added_at" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="Event"
+      remarks="Events">
+      <column name="id" type="int" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="device_id" type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="type" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="payload_id" type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="happened_at" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    
+    <createTable tableName="Payload"
+      remarks="Payload">
+      <column name="id" type="int" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="speed" type="int">
+        <constraints nullable="true"/>
+      </column>
+      <column name="distance" type="int">
+        <constraints nullable="true"/>
+      </column>
+      <column name="temperature" type="real">
+        <constraints nullable="true"/>
+      </column>
+      <column name="humidity" type="real">
+        <constraints nullable="true"/>
+      </column>
+    </createTable>
+    
+    <createTable tableName="Active_device"
+      remarks="Active devices">
+      <column name="id" type="int" autoIncrement="true">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="device_id" type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="first_activity" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_activity" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    
+    <addForeignKeyConstraint baseTableName="Event" baseColumnNames="device_id"
+    	constraintName="device_id_fk"
+      referencedTableName="Device" referencedColumnNames="id"/>
+      
+    <addForeignKeyConstraint baseTableName="Event" baseColumnNames="payload_id"
+    	constraintName="payload_id_fk"
+      referencedTableName="Payload" referencedColumnNames="id"/>
+
+    <addForeignKeyConstraint baseTableName="Active_device" baseColumnNames="device_id"
+    	constraintName="device_id_fk"
+      referencedTableName="Device" referencedColumnNames="id"/>
+  </changeSet>
+</databaseChangeLog>

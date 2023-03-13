@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/create-all-tables-new-schema.xml
+  
