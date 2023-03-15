@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.company.test.IotRestProject.models.ActiveDevice;
 import com.company.test.IotRestProject.models.Device;
 import com.company.test.IotRestProject.models.Event;
@@ -19,12 +18,15 @@ public class EventsService {
 	private final EventRepository eventRepository;
 	private final ActiveDevicesService activeDevicesService;
 	private final PayloadRepository payloadRepository;
+	private final DeviceService deviceService;
 	@Autowired
-	public EventsService(EventRepository eventRepository,ActiveDevicesService activeDevicesService,PayloadRepository payloadRepository) {
+	public EventsService(EventRepository eventRepository,ActiveDevicesService activeDevicesService,
+			PayloadRepository payloadRepository,DeviceService deviceService) {
 		super();
 		this.eventRepository = eventRepository;
 		this.activeDevicesService = activeDevicesService;
 		this.payloadRepository = payloadRepository;
+		this.deviceService = deviceService;
 	}
 	@Transactional
 	public void register(Event event) {
@@ -45,5 +47,9 @@ public class EventsService {
 	}
 	public List<Event> findByDevice(Device device){
 		return eventRepository.findByDevice(device);
+	}
+	public List<Event> findEventsByDeviceSerialNumber(String serialNumber){
+		return deviceService.findBySerialNumber(serialNumber).getEvents();
+		
 	}
 }

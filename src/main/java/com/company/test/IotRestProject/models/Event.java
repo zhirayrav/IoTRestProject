@@ -15,8 +15,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "\"Event\"")
@@ -27,6 +25,7 @@ public class Event {
 	private int id;
 	@ManyToOne
 	@JoinColumn(name = "device_id",referencedColumnName = "id")
+	@JsonBackReference(value = "device-event")
 	private Device device;
 	@Column(name = "type")
 	@Enumerated(EnumType.STRING)
@@ -35,6 +34,7 @@ public class Event {
 	private LocalDateTime happenedAt;
 	@OneToOne
 	@JoinColumn(name = "payload_id",referencedColumnName = "id")
+	@JsonBackReference(value = "event-payload")
 	private Payload payload;
 	public int getId() {
 		return id;

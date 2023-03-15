@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "\"Payload\"")
 public class Payload {
@@ -24,6 +26,7 @@ public class Payload {
 	@Column
 	private Double humidity;
 	@OneToOne(mappedBy = "payload")
+	@JsonBackReference(value = "event-payload")
 	private Event event;
 	public int getSpeed() {
 		return speed;
@@ -31,14 +34,12 @@ public class Payload {
 	public void setSpeed(Integer speed) {
 		this.speed = speed;
 	}
-	
 	public Integer getDistance() {
 		return distance;
 	}
 	public void setDistance(Integer distance) {
 		this.distance = distance;
 	}
-
 	public Double getTemperature() {
 		return temperature;
 	}

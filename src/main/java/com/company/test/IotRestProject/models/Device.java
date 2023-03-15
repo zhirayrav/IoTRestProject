@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +15,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = "\"Device\"")
@@ -36,11 +34,11 @@ public class Device {
 	private String secretKey;
 	@Column(name = "added_at")
 	private LocalDateTime addedAt;
-	@OneToOne(mappedBy = "device",fetch = FetchType.LAZY)
-	@JsonIgnore
+	@OneToOne(mappedBy = "device")
+	@JsonBackReference(value = "device-actDevice")
 	private ActiveDevice isActiveId;
 	@OneToMany(mappedBy = "device")
-	@JsonIgnore
+	@JsonManagedReference(value = "device-event")
 	private List<Event> events;
 	public int getId() {
 		return id;
