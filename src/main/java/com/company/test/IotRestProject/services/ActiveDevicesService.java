@@ -1,5 +1,7 @@
 package com.company.test.IotRestProject.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +19,19 @@ public class ActiveDevicesService {
 		super();
 		this.activeDevicesRepository = activeDevicesRepository;
 	}
-	public ActiveDevice findByDeviceId(Device device) {
-		return activeDevicesRepository.findByDeviceId(device).orElse(null);
+	public ActiveDevice findByDevice(Device device) {
+		return activeDevicesRepository.findByDevice(device).orElse(null);
 	}
 	@Transactional
 	public void saveActivity(ActiveDevice activeDevice) {
 		activeDevicesRepository.save(activeDevice);
+	}
+	public List<ActiveDevice> findAll(){
+		return activeDevicesRepository.findAll();
+	}
+	@Transactional
+	public void deleteByActiveDeviceId(int id) {
+		activeDevicesRepository.deleteById(id);
 	}
 	
 }

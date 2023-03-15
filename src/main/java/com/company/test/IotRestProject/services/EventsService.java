@@ -1,10 +1,13 @@
 package com.company.test.IotRestProject.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.company.test.IotRestProject.models.ActiveDevice;
+import com.company.test.IotRestProject.models.Device;
 import com.company.test.IotRestProject.models.Event;
 import com.company.test.IotRestProject.models.Payload;
 import com.company.test.IotRestProject.repositories.EventRepository;
@@ -28,7 +31,7 @@ public class EventsService {
 		Payload payload = event.getPayload();
 		payloadRepository.save(payload);
 		eventRepository.save(event);
-		ActiveDevice activDevice = activeDevicesService.findByDeviceId(event.getDevice());
+		ActiveDevice activDevice = activeDevicesService.findByDevice(event.getDevice());
 		if(activDevice == null) {
 			ActiveDevice newActiveDevice = new ActiveDevice();
 			newActiveDevice.setFirstActivity(event.getHappenedAt());
@@ -39,5 +42,8 @@ public class EventsService {
 		else
 			activDevice.setLastActivity(event.getHappenedAt());
 		
+	}
+	public List<Event> findByDevice(Device device){
+		return eventRepository.findByDevice(device);
 	}
 }
