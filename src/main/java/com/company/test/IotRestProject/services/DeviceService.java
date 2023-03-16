@@ -9,9 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.company.test.IotRestProject.dto.DeviceDTO;
 import com.company.test.IotRestProject.models.Device;
 import com.company.test.IotRestProject.models.TypeOfDevice;
 import com.company.test.IotRestProject.repositories.DevicesRepository;
+import com.company.test.IotRestProject.utils.DeviceIncorrectException;
 import com.company.test.IotRestProject.utils.DeviceNotFoundException;
 import com.company.test.IotRestProject.utils.JWTUtil;
 
@@ -54,7 +56,6 @@ public class DeviceService {
 				list.add(d.getDevice());
 			});
 		return list;
-//				activeDevicesService.findAll().stream().map(ActiveDevice::getDevice).collect(Collectors.toList());
 	}
 	public List<Device> getAllDevices(){
 		return devicesRepository.findAll();
@@ -76,6 +77,11 @@ public class DeviceService {
 	}
 	public List<Device> findAllWithPagination(Integer page,Integer devicesPerPage){
 		return devicesRepository.findAll(PageRequest.of(page, devicesPerPage)).getContent();
+	}
+	public boolean verify(DeviceDTO deviceDTO) {
+		 devicesRepository.findBySerialNumber(deviceDTO.getSerialNumber()).ifPresent(d -> {throw new DeviceIncorrectException("Device with serial number  "+ d.getSerialNumber()+ "  already exist");});
+		 devicesRepository.findByName(deviceDTO.getName()).ifPresent(d -> {throw new DeviceIncorrectException("Device with name "+ d.getName()+ "  already exist");});
+		return true;
 	}
 	
 }

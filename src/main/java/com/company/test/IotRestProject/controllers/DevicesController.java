@@ -24,6 +24,7 @@ import com.company.test.IotRestProject.models.TypeOfDevice;
 import com.company.test.IotRestProject.services.ActiveDevicesService;
 import com.company.test.IotRestProject.services.DeviceService;
 import com.company.test.IotRestProject.services.EventsService;
+import com.company.test.IotRestProject.utils.DeviceIncorrectException;
 import com.company.test.IotRestProject.utils.TypeOfDeviceErrorResponse;
 import com.company.test.IotRestProject.utils.TypeOfDeviceNotFoundException;
 
@@ -39,6 +40,7 @@ public class DevicesController {
 		this.modelMapper = modelMapper;
 	}
 	public Device convertToDevice(DeviceDTO deviceDTO) {
+		deviceService.verify(deviceDTO);
 		Device device = modelMapper.map(deviceDTO, Device.class);
 		device = deviceService.enrichForSave(device);
 		if(deviceDTO.getType().toUpperCase().equals("BLUETOOTH"))
@@ -93,6 +95,11 @@ public class DevicesController {
 	private ResponseEntity<TypeOfDeviceErrorResponse> handleException(TypeOfDeviceNotFoundException e){
 		TypeOfDeviceErrorResponse response = new TypeOfDeviceErrorResponse("This type of device wasn't found!", System.currentTimeMillis());
 		return new ResponseEntity<TypeOfDeviceErrorResponse>(response,HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler
+	private ResponseEntity<TypeOfDeviceErrorResponse> handleException(DeviceIncorrectException e){
+		TypeOfDeviceErrorResponse response = new TypeOfDeviceErrorResponse(e.getMessage(), System.currentTimeMillis());
+		return new ResponseEntity<TypeOfDeviceErrorResponse>(response,HttpStatus.BAD_REQUEST);
 	}
 	
 }

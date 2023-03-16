@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +15,5 @@ public interface DevicesRepository extends JpaRepository<Device, Integer>{
 	List<Device> findByType(TypeOfDevice type);
 	List<Device> findByAddedAtBefore(LocalDateTime to);
 	List<Device> findByAddedAtAfter(LocalDateTime from);
+	Optional<Device> findByName(String name);
 }
