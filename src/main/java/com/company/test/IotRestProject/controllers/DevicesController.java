@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,7 +24,6 @@ import com.company.test.IotRestProject.models.TypeOfDevice;
 import com.company.test.IotRestProject.services.ActiveDevicesService;
 import com.company.test.IotRestProject.services.DeviceService;
 import com.company.test.IotRestProject.services.EventsService;
-import com.company.test.IotRestProject.utils.JWTUtil;
 import com.company.test.IotRestProject.utils.TypeOfDeviceErrorResponse;
 import com.company.test.IotRestProject.utils.TypeOfDeviceNotFoundException;
 
@@ -34,24 +31,19 @@ import com.company.test.IotRestProject.utils.TypeOfDeviceNotFoundException;
 @RequestMapping("/device")
 public class DevicesController {
 	private final DeviceService deviceService;
-	private final EventsService eventsService;
 	private final ModelMapper modelMapper;
-	private final ActiveDevicesService activeDevicesService; 
-	
 	@Autowired
 	public DevicesController(DeviceService deviceService, EventsService eventsService,ModelMapper modelMapper,ActiveDevicesService activeDevicesService) {
 		super();
 		this.deviceService = deviceService;
-		this.eventsService = eventsService;
 		this.modelMapper = modelMapper;
-		this.activeDevicesService = activeDevicesService;
 	}
 	public Device convertToDevice(DeviceDTO deviceDTO) {
 		Device device = modelMapper.map(deviceDTO, Device.class);
 		device = deviceService.enrichForSave(device);
 		if(deviceDTO.getType().toUpperCase().equals("BLUETOOTH"))
 			device.setType(TypeOfDevice.BLUETOOTH);
-		else if(deviceDTO.getType().toUpperCase().equals("WI_FI"))
+		else if(deviceDTO.getType().toUpperCase().equals("WI-FI"))
 			device.setType(TypeOfDevice.WI_FI);
 		else throw new TypeOfDeviceNotFoundException();
 		return device;
@@ -65,7 +57,6 @@ public class DevicesController {
 	@GetMapping("/{serialNumber}")
 	public Device getDeviceBySerialNumber(@PathVariable String serialNumber) {
 		Device device = deviceService.findBySerialNumber(serialNumber);
-//		deviceService.enrichForResponse(device);
 		return device;
 	}
 	@GetMapping()

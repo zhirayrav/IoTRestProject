@@ -9,15 +9,19 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "\"Payload\"")
+@JsonInclude(Include.NON_NULL)
 public class Payload {
 	@Column
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column
+	
 	private Integer speed;
 	@Column
 	private Integer distance;
@@ -28,7 +32,7 @@ public class Payload {
 	@OneToOne(mappedBy = "payload")
 	@JsonBackReference(value = "event-payload")
 	private Event event;
-	public int getSpeed() {
+	public Integer getSpeed() {
 		return speed;
 	}
 	public void setSpeed(Integer speed) {

@@ -1,10 +1,13 @@
 package com.company.test.IotRestProject.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.company.test.IotRestProject.dto.EventCountGroupByDeviceTypeDTO;
 import com.company.test.IotRestProject.models.ActiveDevice;
 import com.company.test.IotRestProject.models.Device;
 import com.company.test.IotRestProject.models.Event;
@@ -51,5 +54,31 @@ public class EventsService {
 	public List<Event> findEventsByDeviceSerialNumber(String serialNumber){
 		return deviceService.findBySerialNumber(serialNumber).getEvents();
 		
+	}
+	public List<Event> findEventsByDeviceSerialNumberWithPagination(String serialNumber,Integer page,Integer eventsPerPage){
+		Device device = deviceService.findBySerialNumber(serialNumber);
+		return eventRepository.findByDevice(device,PageRequest.of(page, eventsPerPage));
+	}
+	public List<Event> findBySerialNumberBefore(String serialNumber,LocalDateTime to){
+		return eventRepository.findByDeviseSerialNumberHappenedAtBefore(serialNumber, to);
+	}
+	public List<Event> findBySerialNumberAfter(String serialNumber,LocalDateTime from){
+		return eventRepository.findByDeviseSerialNumberHappenedAtAfter(serialNumber, from);
+	}
+	public List<Event> findBySerialNumberBetween(String serialNumber,LocalDateTime from,LocalDateTime to){
+		return eventRepository.findByDeviseSerialNumberHappenedAtBetween(serialNumber, from, to);
+	}
+	
+	public List<EventCountGroupByDeviceTypeDTO> getEventsCountGroupByDeviceTypeBetween(LocalDateTime from,LocalDateTime to){
+		return eventRepository.findCountGroupByDeviceTypeBetween(from, to);
+	}
+	public List<EventCountGroupByDeviceTypeDTO> getEventsCountGroupByDeviceTypeBefore(LocalDateTime to){
+		return eventRepository.findCountGroupByDeviceTypeBefore(to);
+	}
+	public List<EventCountGroupByDeviceTypeDTO> getEventsCountGroupByDeviceTypeAfter(LocalDateTime from){
+		return eventRepository.findCountGroupByDeviceTypeAfter(from);
+	}
+	public List<EventCountGroupByDeviceTypeDTO> getEventsCountGroupByDeviceType(){
+		return eventRepository.findCountGroupByDeviceType();
 	}
 }

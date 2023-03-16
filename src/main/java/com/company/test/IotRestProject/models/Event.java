@@ -15,6 +15,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 @Entity
 @Table(name = "\"Event\"")
@@ -34,7 +38,7 @@ public class Event {
 	private LocalDateTime happenedAt;
 	@OneToOne
 	@JoinColumn(name = "payload_id",referencedColumnName = "id")
-	@JsonBackReference(value = "event-payload")
+	@JsonManagedReference(value = "event-payload")
 	private Payload payload;
 	public int getId() {
 		return id;
